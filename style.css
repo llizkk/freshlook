@@ -2336,3 +2336,67 @@ body {
         padding: 1rem;
     }
 }
+/* Mobile Hero Actions Center */
+@media (max-width: 768px) {
+    .hero-actions {
+        justify-content: center !important;
+    }
+    
+    .hero-actions .btn {
+        min-width: 200px;
+        justify-content: center;
+    }
+    
+    .hero-stats {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 1rem;
+    }
+    
+    .stat-item {
+        padding: 1rem 0.5rem;
+        min-height: 70px;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-stats {
+        grid-template-columns: 1fr !important;
+        gap: 0.75rem;
+    }
+    
+    .stat-item {
+        min-height: 60px;
+        padding: 0.75rem;
+    }
+}
+
+/* Fix for process navigation active state */
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 20px;
+    right: 20px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 1px;
+}
+
+.mobile-nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--accent);
+    border-radius: 0 2px 2px 0;
+}

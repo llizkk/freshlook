@@ -20,6 +20,7 @@ class FreshLookApp {
         // Initialize after DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
             this.components.backToTop = new BackToTop();
+            this.components.serviceCards = new ServiceCards();
         });
     }
 }
@@ -77,7 +78,7 @@ class Preloader {
     }
 }
 
-// Header
+// Header - ИСПРАВЛЕННЫЙ КЛАСС
 class Header {
     constructor() {
         this.header = document.querySelector('.header');
@@ -92,6 +93,9 @@ class Header {
         this.setupActiveLinks();
         this.setupMobileMenu();
         this.setupClickOutside();
+        
+        // Добавляем обработчик клика для навигационных ссылок
+        this.setupNavLinksClick();
     }
 
     setupScroll() {
@@ -129,16 +133,40 @@ class Header {
     updateActiveLinks(activeId) {
         this.navLinks.forEach(link => {
             link.classList.remove('active');
-            if (link.getAttribute('href') === `#${activeId}`) {
+            const href = link.getAttribute('href');
+            // Убираем # из href для сравнения
+            if (href && href.replace('#', '') === activeId) {
                 link.classList.add('active');
             }
         });
 
         document.querySelectorAll('.mobile-nav-link').forEach(link => {
             link.classList.remove('active');
-            if (link.getAttribute('href') === `#${activeId}`) {
+            const href = link.getAttribute('href');
+            if (href && href.replace('#', '') === activeId) {
                 link.classList.add('active');
             }
+        });
+    }
+
+    setupNavLinksClick() {
+        this.navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').replace('#', '');
+                const targetSection = document.getElementById(targetId);
+                
+                if (targetSection) {
+                    // Плавная прокрутка к секции
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Обновляем активные ссылки
+                    this.updateActiveLinks(targetId);
+                }
+            });
         });
     }
 
@@ -149,8 +177,20 @@ class Header {
         });
 
         document.querySelectorAll('.mobile-nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                this.closeMobileMenu();
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').replace('#', '');
+                const targetSection = document.getElementById(targetId);
+                
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    this.updateActiveLinks(targetId);
+                    this.closeMobileMenu();
+                }
             });
         });
     }
@@ -488,7 +528,7 @@ class SmoothScroll {
 
         const animation = (currentTime) => {
             if (start === null) start = currentTime;
-            const timeElapsed = currentTime - start;
+            const timeElapsed = currentTime - startTime;
             const run = this.ease(timeElapsed, startPosition, distance, duration);
             window.scrollTo(0, run);
             if (timeElapsed < duration) requestAnimationFrame(animation);
